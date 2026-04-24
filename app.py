@@ -8,6 +8,14 @@ app = Flask(__name__)
 model      = joblib.load("model_v2.pkl")
 vectorizer = joblib.load("vectorizer_v2.pkl")
 
+#  DEBUG START
+print("DEBUG START 🔥")
+print("Vectorizer type:", type(vectorizer))
+print("Has IDF:", hasattr(vectorizer, "idf_"))
+print("Vocabulary size:", len(vectorizer.vocabulary_) if hasattr(vectorizer, "vocabulary_") else "No vocab")
+print("DEBUG END 🔥")
+#  DEBUG END
+
 STOP_WORDS = set(SKL_STOP)
 
 # ── Lazy-load spaCy once ───────────────────────────────────────────────────────
