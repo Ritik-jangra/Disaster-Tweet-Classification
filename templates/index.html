@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DisasterAI — Tweet Classification</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════  NAVBAR  ═══════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="#">
+    <span class="logo-icon">🚨</span>
+    Disaster<span class="logo-accent">AI</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero"       class="nav-link">Home</a></li>
+    <li><a href="#demo"       class="nav-link">Demo</a></li>
+    <li><a href="#howitworks" class="nav-link">How It Works</a></li>
+    <li><a href="#insights"   class="nav-link">Insights</a></li>
+    <li><a href="#contact"    class="nav-link">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-live-dot"></span>
+    <span class="nav-live-label">MODEL LIVE</span>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════  HERO  ════════════════════════════= -->
+<section class="hero" id="hero">
+  <!-- animated grid bg -->
+  <div class="hero-grid"></div>
+  <!-- radial glow -->
+  <div class="hero-glow"></div>
+
+  <div class="hero-content reveal">
+    <div class="hero-eyebrow">
+      <span class="dot red"></span> NLP · MACHINE LEARNING · REAL-TIME
+    </div>
+    <h1 class="hero-title">
+      AI-Powered<br/>
+      <span class="title-highlight">Disaster Tweet</span><br/>
+      Detection
+    </h1>
+    <p class="hero-sub">
+      Classify disaster-related tweets in milliseconds using<br/>
+      Logistic Regression + TF-IDF, trained on 7,000+ real-world tweets.
+    </p>
+    <a href="#demo" class="btn-primary">
+      <span>Try Live Demo</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="hero-stats reveal" style="--delay:.3s">
+    <div class="stat">
+      <div class="stat-num">81<span>%</span></div>
+      <div class="stat-label">Accuracy</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">77.4<span>%</span></div>
+      <div class="stat-label">F1 Score</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">15K</div>
+      <div class="stat-label">TF-IDF Features</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Models Tested</div>
+    </div>
+  </div>
+
+  <a href="#demo" class="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </a>
+</section>
+
+<!-- ═══════════════════════════  DEMO  ════════════════════════════= -->
+<section class="section demo-section" id="demo">
+  <div class="container">
+    <div class="section-tag blue reveal">⚡ Live Demo</div>
+    <h2 class="section-title reveal">Classify Any Tweet</h2>
+    <p class="section-sub reveal">
+      Type a custom tweet or pick one of the samples below.
+      The model cleans, vectorises, and classifies it instantly.
+    </p>
+
+    <div class="demo-card reveal">
+      <!-- top bar -->
+      <div class="demo-topbar">
+        <div class="topbar-dots">
+          <span class="dot-btn red"></span>
+          <span class="dot-btn yellow"></span>
+          <span class="dot-btn green"></span>
+        </div>
+        <div class="topbar-title">DISASTER CLASSIFIER · v1.0</div>
+        <div class="topbar-status" id="statusBadge">READY</div>
+      </div>
+
+      <!-- samples -->
+      <div class="samples-row">
+        <span class="samples-label">Quick samples:</span>
+        <div class="samples-chips" id="sampleChips">
+          <button class="chip chip-red"  data-tweet="Wildfire spreading rapidly near residential areas, emergency services deployed #emergency">🔴 Wildfire</button>
+          <button class="chip chip-red"  data-tweet="Massive earthquake hits coastal region, thousands evacuated immediately">🔴 Earthquake</button>
+          <button class="chip chip-red"  data-tweet="Flood warnings issued across 5 districts after heavy rainfall overnight">🔴 Flood</button>
+          <button class="chip chip-blue" data-tweet="omg this traffic is a total disaster lmao im gonna be so late to work">🔵 Traffic joke</button>
+          <button class="chip chip-blue" data-tweet="my wifi is dead and i have an exam tomorrow this is literally the worst">🔵 Wi-Fi down</button>
+          <button class="chip chip-blue" data-tweet="disaster of a game last night, my team completely fell apart in overtime">🔵 Sports</button>
+        </div>
+      </div>
+
+      <!-- input -->
+      <div class="input-wrap">
+        <textarea
+          id="tweetInput"
+          placeholder="Enter a tweet to classify…"
+          rows="3"
+          maxlength="280"
+        ></textarea>
+        <div class="char-count"><span id="charCount">0</span>/280</div>
+      </div>
+
+      <!-- predict -->
+      <button class="btn-predict" id="predictBtn" onclick="predict()">
+        <span id="btnLabel">Analyse Tweet</span>
+        <div class="btn-spinner hidden" id="btnSpinner">
+          <div class="spinner"></div>
+        </div>
+      </button>
+
+      <!-- result -->
+      <div class="result-wrap hidden" id="resultWrap">
+        <div class="result-card" id="resultCard">
+          <div class="result-header">
+            <span class="result-icon" id="resultIcon"></span>
+            <span class="result-label" id="resultLabel"></span>
+          </div>
+          <div class="result-conf-row">
+            <span class="conf-key">Confidence</span>
+            <span class="conf-val" id="confVal"></span>
+          </div>
+          <div class="conf-bar-track">
+            <div class="conf-bar-fill" id="confBar"></div>
+          </div>
+          <div class="result-cleaned">
+            <span class="cleaned-key">Cleaned input →</span>
+            <span class="cleaned-val" id="cleanedText"></span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /demo-card -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════  HOW IT WORKS  ═══════════════════= -->
+<section class="section" id="howitworks">
+  <div class="container">
+    <div class="section-tag reveal">🧠 Pipeline</div>
+    <h2 class="section-title reveal">How It Works</h2>
+    <p class="section-sub reveal">
+      Four deterministic steps transform raw tweet text into a calibrated prediction.
+    </p>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">🧹</div>
+        <h3 class="step-title">Text Cleaning</h3>
+        <p class="step-desc">
+          Strips URLs, @mentions, hashtags, punctuation, and stopwords.
+          spaCy lemmatises tokens — <em>running → run</em> — to reduce vocabulary noise.
+        </p>
+        <div class="step-tag">spaCy · Regex</div>
+      </div>
+      <div class="step-card reveal" style="--delay:.1s">
+        <div class="step-num">02</div>
+        <div class="step-icon">📐</div>
+        <h3 class="step-title">TF-IDF Vectorisation</h3>
+        <p class="step-desc">
+          15,000-feature TF-IDF with unigrams + bigrams converts cleaned text into a
+          sparse numeric vector. Sublinear scaling dampens extreme term frequencies.
+        </p>
+        <div class="step-tag">scikit-learn</div>
+      </div>
+      <div class="step-card reveal" style="--delay:.2s">
+        <div class="step-num">03</div>
+        <div class="step-icon">⚙️</div>
+        <h3 class="step-title">ML Classification</h3>
+        <p class="step-desc">
+          Logistic Regression learns one weight per TF-IDF feature.
+          <em>class_weight='balanced'</em> handles dataset imbalance without resampling.
+        </p>
+        <div class="step-tag">Logistic Regression</div>
+      </div>
+      <div class="step-card reveal" style="--delay:.3s">
+        <div class="step-num">04</div>
+        <div class="step-icon">📊</div>
+        <h3 class="step-title">Prediction Output</h3>
+        <p class="step-desc">
+          Returns a binary label (0/1) and a calibrated probability score so you
+          always know exactly how confident the model is.
+        </p>
+        <div class="step-tag">predict_proba</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════  MODEL INFO  ═══════════════════════ -->
+<section class="section model-section">
+  <div class="container">
+    <div class="section-tag red reveal">🔬 Model Comparison</div>
+    <h2 class="section-title reveal">Why Logistic Regression?</h2>
+    <p class="section-sub reveal">Three models were benchmarked. LR wins on F1 — the most meaningful metric when missing real disasters is costly.</p>
+
+    <div class="model-table-wrap reveal">
+      <table class="model-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="best-row">
+            <td><span class="star">⭐</span> Logistic Regression</td>
+            <td>80.6%</td>
+            <td>77.6%</td>
+            <td>77.2%</td>
+            <td class="highlight-cell">77.4%</td>
+          </tr>
+          <tr>
+            <td>SVM (LinearSVC)</td>
+            <td>79.8%</td>
+            <td>76.5%</td>
+            <td>76.3%</td>
+            <td>76.4%</td>
+          </tr>
+          <tr>
+            <td>Naive Bayes</td>
+            <td>81.3%</td>
+            <td>83.9%</td>
+            <td class="warn-cell">69.9%</td>
+            <td>76.2%</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">⚠️ Naive Bayes has the highest precision but the lowest recall — it misses too many real disasters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════  INSIGHTS  ═══════════════════════= -->
+<section class="section" id="insights">
+  <div class="container">
+    <div class="section-tag green reveal">📊 Insights</div>
+    <h2 class="section-title reveal">Data &amp; Model Analysis</h2>
+    <p class="section-sub reveal">
+      Trained on the Kaggle "Natural Language Processing with Disaster Tweets" dataset.
+      Explore EDA, model comparisons, and error patterns below.
+    </p>
+
+    <div class="insights-grid">
+      <div class="insight-card reveal">
+        <div class="insight-img-wrap">
+          <img src="/static/images/eda_dashboard.png"
+               alt="EDA Dashboard"
+               loading="lazy"
+               onerror="this.closest('.insight-card').classList.add('img-missing')"/>
+          <div class="img-placeholder">📊 eda_dashboard.png<br/><small>Place file in project root</small></div>
+        </div>
+        <div class="insight-info">
+          <h3>EDA Dashboard</h3>
+          <p>Class distribution, tweet length analysis, top words per class, and word clouds for both categories.</p>
+        </div>
+      </div>
+
+      <div class="insight-card reveal" style="--delay:.1s">
+        <div class="insight-img-wrap">
+          <img src="/static/images/model_results.png"
+               alt="Model Results"
+               loading="lazy"
+               onerror="this.closest('.insight-card').classList.add('img-missing')"/>
+          <div class="img-placeholder">🤖 model_results.png<br/><small>Place file in project root</small></div>
+        </div>
+        <div class="insight-info">
+          <h3>Model Results</h3>
+          <p>Metric comparison bar chart, confusion matrices for all three models, and Naive Bayes discriminative words.</p>
+        </div>
+      </div>
+
+      <div class="insight-card reveal" style="--delay:.2s">
+        <div class="insight-img-wrap">
+          <img src="/static/images/error_analysis.png" 
+               alt="Error Analysis"
+               loading="lazy"
+               onerror="this.closest('.insight-card').classList.add('img-missing')"/>
+          <div class="img-placeholder">🔬 error_analysis.png<br/><small>Place file in project root</small></div>
+        </div>
+        <div class="insight-info">
+          <h3>Error Analysis</h3>
+          <p>False positives vs false negatives breakdown for Logistic Regression and Naive Bayes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════  USE CASES  ═══════════════════════ -->
+<section class="section use-section">
+  <div class="container">
+    <div class="section-tag green reveal">💡 Applications</div>
+    <h2 class="section-title reveal">Real-World Use Cases</h2>
+    <p class="section-sub reveal">DisasterAI can power emergency, media, and public-safety systems at scale.</p>
+
+    <div class="use-grid">
+      <div class="use-card reveal">
+        <div class="use-icon">🚒</div>
+        <h3>Early Disaster Detection</h3>
+        <p>Monitor Twitter streams in real time and alert emergency services seconds after disaster events are first reported online.</p>
+      </div>
+      <div class="use-card reveal" style="--delay:.1s">
+        <div class="use-icon">📡</div>
+        <h3>Emergency Response</h3>
+        <p>Triage incoming social media signals so responders can act on verified disaster reports rather than non-disaster noise.</p>
+      </div>
+      <div class="use-card reveal" style="--delay:.2s">
+        <div class="use-icon">📰</div>
+        <h3>Social Media Monitoring</h3>
+        <p>Newsrooms can automatically filter disaster-related content from high-volume feeds for faster, more accurate reporting.</p>
+      </div>
+      <div class="use-card reveal" style="--delay:.3s">
+        <div class="use-icon">🚫</div>
+        <h3>Misinformation Control</h3>
+        <p>Flag non-disaster tweets that misuse disaster language, helping platforms reduce public panic and false alarms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════  FOOTER  ══════════════════════════= -->
+<footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-logo">🚨 Disaster<span>AI</span></div>
+    <p class="footer-tagline">AI-Powered Disaster Tweet Detection System</p>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        GitHub
+      </a>
+      <a href="https://linkedin.com" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+        LinkedIn
+      </a>
+      <a href="mailto:you@email.com">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m2 7 10 7 10-7"/>
+        </svg>
+        Contact
+      </a>
+    </div>
+    <div class="footer-copy">
+      Made with <span class="heart">❤️</span> using Flask · Logistic Regression · TF-IDF · spaCy
+    </div>
+  </div>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
